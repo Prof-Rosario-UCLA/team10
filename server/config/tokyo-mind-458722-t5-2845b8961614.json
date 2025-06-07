@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "tokyo-mind-458722-t5",
+  "private_key_id": "2845b89616144895a69a49f91f0c37b59752a14f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDkx/G6qAeUruOt\nzFGP9mCvrhZ9paHy2af6raNKE2RRTjsgo4gT3yKhMvSHhl4Z5hvhXoPHX7wnIZGK\nF4soCcO9r54DYypatawUTmNfjKXnURqi9hXoGjvbfXrQSh3Omb0m9FP2NaYK5oeL\nEmPJF6AmJnkGOqzdDo+xN+xSNj8QBdHk7VFC5GmS0LdDkTdKlYi7UfqajMx0kk3J\nN+n8uagwgsfWCv4ZUEl6zGtrl2AUraL4K143nPwLyggiXgX2PljlDnrsRfl5OM1+\nCa1pQGTuRVWZ0SWDOWNvAV/It3cnETmaMNveuaXm/HjMORPZ/M3PfwZ6ZI2bHU/h\nOFHqpKOXAgMBAAECggEADzRYlNqg8lkzKXRIQWSS5WoQ9ZXB7xVXDBppHT2vr5We\n6Vrk6sksEIGF7dHYxCjeVnqFEIWEyCb7eK164pTPjPY0bq4y/OdRAeJ5yTpcNkTW\nG9l1+EByFPLAbEJYu8fM4d9gCx9ioxvSC0SUHCO1UYPCDE9u+JwEobcBPi97vnE8\nZfHRd+cv/ng3putlfqwWv0LwypTjJHkc9Z0r3VWGKrykejY7IIPtEBdHPiT99yby\n5Pt7oIg9usEduXTQn2MrlNKRyc6snEQ7cR/Dw/XbLIn/GvdazWulZbhIvDa2cWWu\nFyKcYL9izWZc2WJcCAR7vw9FxTa/GIE+77aVUY0pNQKBgQD4Cp3y0DwVA6W5XlWN\nBiSdPGQCqTJDjUuuHmXtQmQ6cAx/f5oTrEr+no2OvcXxHZtlVHlk4KKy2TSdg/XP\nqWerxEsa1+elY6KfiS8LeHbEpPhSHZvObsdhT/RXVSqszYQt1V1zSjsRvzO2PgFj\nU+8yfGXpFBswVveRH4z+5yS0MwKBgQDsHx/S9XR3X/zQ3WIyrtnAigb5h0gJVnct\nRntDnJl2UVtSMPV+u7gOSlfDd++UR5IEg1ETK8jtiUmntmKuuIdjkeYL+ly3iYg1\nOUlurKilDamMYJX7X2rgr3ufiS7EwnWYUFHG1gs6Nf+VZp6VFRWVtX0LYqu80lYm\nndgNF2WPDQKBgQCumiKnSwgQLtoYy5vjQqDBgkJQUTQNs0fD0KglRKfzLu7NTVBz\nasP7yjaRdWsCGLpLsRQm+63rwdQ00TBWtsRAeFP6GGN629EdBl90bp8EO7CFdUw5\nG2gES1kPpOb+b0kNTnWS83zzOCm5rpohhnMJkeHXGY0uEPoCUThaMvF2WwKBgEvk\nFQ5w5eYYa+GVxiIUINjJhERfPsABknxy0tuAUbK9o2RfaAg7vYSaUGr6+X3nIv9g\nVYab5BC0t3+4Fy+hD6LpGc9vwK0c/zJcH0X7KJkkMwJzaMFKgceFn24/YVDMT4+N\nATuvQByNjoAuY3n3NODRXEd0h05BLH9s7CwJARNhAoGACxQtVHw2NGJRRLIjym/Y\ngh+m9x2mQdwb0jNNch/sdNIb/0408ProcLbPIQrIQEWYwaiSxIuJ849US3e2g8rQ\nuKugxyhyIMfKbDUQaFz9dARegLSZc/Wp/uoLgaNW0Qz+hYfr0gljboAOAHrZOdAs\nx3X1luYKCAyIamiEzIEjlJc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "wilddex-vision@tokyo-mind-458722-t5.iam.gserviceaccount.com",
+  "client_id": "113036734106869476723",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/wilddex-vision%40tokyo-mind-458722-t5.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
