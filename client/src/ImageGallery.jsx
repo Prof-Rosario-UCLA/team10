@@ -5,28 +5,42 @@ export default function ImageGallery() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    axios.get('http://34.19.31.71:5000/api/upload/images')
-      .then(res => setImages(res.data))
-      .catch(err => console.error('Failed to fetch images:', err));
+    const fetchImages = () => {
+      axios.get('https://backend-dot-tokyo-mind-458722-t5.uw.r.appspot.com/api/upload/images', {
+        withCredentials: true,
+      })
+        .then(res => setImages(res.data))
+        .catch(err => console.error('Failed to fetch images:', err));
+    };
+
+    fetchImages(); 
+
+    const interval = setInterval(fetchImages, 5000); 
+
+    return () => clearInterval(interval); 
   }, []);
 
   return (
-    <div style={galleryStyle}>
+    <section style={galleryStyle}>
       {images.map((img, idx) => (
-        <div key={idx} style={cardStyle}>
+        <article key={idx} style={cardStyle} aria-label={`Image of ${img.labels?.[0]?.description || 'Unknown'}`}>
           <img
-            src={`http://34.19.31.71:5000/uploads/${img.filename}`}
+            src={img.url}
             alt={`Image ${idx}`}
             style={imageStyle}
           />
           <div style={infoStyle}>
-            <strong>Species:</strong> {img.labels?.[0]?.description || 'Unknown'}
-            <br />
-            <strong>Confidence:</strong> {(img.labels?.[0]?.score * 100).toFixed(1) || '?'}%
+            <strong>Classification:</strong> {img.labels?.[0]?.description || 'Unknown'}<br />
+            {img.location && (
+              <>
+                <strong>Lat:</strong> {img.location.coordinates[1].toFixed(5)}<br />
+                <strong>Lng:</strong> {img.location.coordinates[0].toFixed(5)}
+              </>
+            )}
           </div>
-        </div>
+        </article>
       ))}
-    </div>
+    </section>
   );
 }
 
@@ -36,7 +50,7 @@ const galleryStyle = {
   gap: '20px',
   padding: '20px',
   width: '100%',
-  boxSizing: 'border-box',
+  boxSizing: 'border-box',     
 };
 
 const cardStyle = {
@@ -47,7 +61,6 @@ const cardStyle = {
 };
 
 const imageStyle = {
-  width: '100%',
   height: '150px',
   objectFit: 'cover',
 };

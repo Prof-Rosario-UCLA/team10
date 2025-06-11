@@ -6,18 +6,16 @@ const ImageSchema = new mongoose.Schema({
     mimetype: String,
     size: Number,
     uploadDate: { type: Date, default: Date.now },
-    location: {
-        lat: Number,
-        long: Number
-    },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     labels: [
-    {
-      description: String,
-      score: Number,
-    },
-  ],
+      {
+        description: String,
+        score: Number,
+      },
+    ],
 });
 
+ImageSchema.index({ location: '2dsphere' });
 const Image = mongoose.model('Image', ImageSchema);
 
 export default Image;

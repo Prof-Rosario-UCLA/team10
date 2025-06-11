@@ -1,66 +1,129 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
 const UploadForm = () => {
   const [file, setFile] = useState(null);
+  const [useCamera, setUseCamera] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+
+  // Start camera when toggled on
+  useEffect(() => {
+    if (useCamera) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          streamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch(err => {
+          console.error('Camera access denied:', err);
+          setMessage('Could not access the camera');
+        });
+    } else {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+    }
+
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [useCamera]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setMessage('');
   };
 
+  const handleTakePhoto = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob(blob => {
+      if (blob) {
+        const imageFile = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+        setFile(imageFile);
+        setMessage('Image captured!');
+      }
+    }, 'image/jpeg');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) return setMessage('Please select a file.');
+    if (!file) return setMessage('Please select or capture an image.');
 
-    const formData = new FormData();
-    formData.append('image', file);
-
+    setUploading(true);
     try {
-      setUploading(true);
-      const res = await axios.post('http://34.19.31.71:5000/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Upload response:', res.data);
+      const formData = new FormData();
+      formData.append('image', file);
 
-      const uploadedFileName = res.data.data.filename
-      setMessage('Upload successful!');
-      const response = await axios.post('http://34.19.31.71:5000/api/classify', {
-        filename: uploadedFileName
-      });
-      console.log('Classification:', response.data.labels);
+      setMessage('Uploading image...');
+      await axios.post(
+        'https://backend-dot-tokyo-mind-458722-t5.uw.r.appspot.com/api/upload',
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        }
+      );
 
-      console.log(res.data);
+      setMessage('Upload and classification successful!');
     } catch (err) {
-      setMessage(`Upload failed: ${err.response?.data?.error || err.message}`);
+      console.error('Upload failed:', err);
+      setMessage(`Upload failed: ${err.message}`);
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow p-4 rounded mt-10">
-      <h2 className="text-xl font-semibold mb-4">Upload Wildlife Image</h2>
-      <form onSubmit={handleSubmit}>
+    <div>
+      <h2>Upload Wildlife Image</h2>
+      <label>
+        <input
+          type="checkbox"
+          checked={useCamera}
+          onChange={() => setUseCamera(prev => !prev)}
+        /> Use Camera
+      </label>
+
+      {useCamera ? (
+        <div>
+          <video ref={videoRef} autoPlay playsInline style={{ width: '100%', maxWidth: 400 }} />
+          <button type="button" onClick={handleTakePhoto}>Take Photo</button>
+        </div>
+      ) : (
         <input
           type="file"
           accept="image/png, image/jpeg"
           onChange={handleFileChange}
-          className="mb-4"
         />
-        <button
-          type="submit"
-          disabled={uploading}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-        >
+      )}
+
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+      <form onSubmit={handleSubmit}>
+        <button type="submit" disabled={uploading}>
           {uploading ? 'Uploading...' : 'Upload'}
         </button>
       </form>
-      {message && <p className="mt-4 text-sm">{message}</p>}
+
+      {message && <p>{message}</p>}
     </div>
   );
 };

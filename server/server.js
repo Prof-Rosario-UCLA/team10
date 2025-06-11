@@ -4,19 +4,23 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import path from 'path';
-import classifyRoute from './routes/classify.js';
-
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
 import uploadRoute from './routes/upload.js';
+import authRoute from './routes/auth.js';
 
 const app = express();
 app.use(cors({
-  origin: 'http://34.19.31.71:5173',
+  origin: 'https://frontend-dot-tokyo-mind-458722-t5.uw.r.appspot.com',
+  credentials: true,
 }));
 app.use(helmet());
+app.use(cookieParser());
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
@@ -24,18 +28,13 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.get('/', (req, res) => res.send('WildDex backend running'));
 
-app.listen(5000, '0.0.0.0', () => {
+app.use('/api/upload', uploadRoute);
+app.use('/api/auth', authRoute);
+
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log('Server listening on port 5000');
 });
 
-app.use('/api/upload', uploadRoute);
-
-const __dirname = path.resolve(); 
-app.use('/uploads', express.static('uploads', {
-  setHeaders: (res, path, stat) => {
-    res.set('Access-Control-Allow-Origin', 'http://34.19.31.71:5173');
-    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
-
-app.use('/api/classify', classifyRoute);
