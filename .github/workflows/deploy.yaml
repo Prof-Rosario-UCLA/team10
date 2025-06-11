@@ -24,7 +24,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Deploy backend
-        run: gcloud app deploy backend/app.yaml --version 1 --quiet
+        run: gcloud app deploy server/app.yaml --version 1 --quiet
 
       - name: Deploy frontend
-        run: gcloud app deploy frontend/app.yaml --version 1 --quiet
+        run: gcloud app deploy client/app.yaml --version 1 --quiet
