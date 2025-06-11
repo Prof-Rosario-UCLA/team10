@@ -1,36 +1,30 @@
-name: Deploy to GAE
+name: Deploy to Google App Engine
 
 on:
   push:
     branches:
-      - main 
+      - main  
 
 jobs:
   deploy:
-    name: Deploy App Engine
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Google Cloud SDK
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Set up gcloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          version: 'latest'
-          service_account_key: ${{ secrets.GCLOUD_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Authenticate with GCloud
-        run: |
-          gcloud auth activate-service-account --key-file=${{ secrets.GCLOUD_KEY }}
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-          gcloud config set app/cloud_build_timeout 900
+      - name: Deploy backend
+        run: gcloud app deploy backend/app.yaml --version 1 --quiet
 
-      - name: Deploy to App Engine
-        run: |
-          cd frontend && gcloud app deploy --version 1 --quiet && cd ../backend && gcloud app deploy --version 1 --quiet
-
-      - name: Get latest app versions
-        run: |
-          gcloud app versions list --format="table(service, version.id, traffic_split, last_deployed_time, serving_status)"
+      - name: Deploy frontend
+        run: gcloud app deploy frontend/app.yaml --version 1 --quiet
