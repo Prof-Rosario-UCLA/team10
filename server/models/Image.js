@@ -13,6 +13,17 @@ const ImageSchema = new mongoose.Schema({
         score: Number,
       },
     ],
+    location: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point',
+      },
+      coordinates: {
+        type: [Number], 
+        index: '2dsphere',
+      },
+  },
 });
 
 ImageSchema.index({ location: '2dsphere' });

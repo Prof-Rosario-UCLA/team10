@@ -33,6 +33,9 @@ router.post('/', authenticate, upload.single('image'), async (req, res) => {
 
     if (!file) return res.status(400).json({ error: 'No file uploaded' });
 
+    const latitude = req.body.latitude ? parseFloat(req.body.latitude) : null;
+    const longitude = req.body.longitude ? parseFloat(req.body.longitude) : null;
+
     const gcsFileName = `${Date.now()}-${file.originalname}`;
     const fileUpload = bucket.file(gcsFileName);
 
@@ -75,6 +78,13 @@ router.post('/', authenticate, upload.single('image'), async (req, res) => {
             userId: req.userId,
           });
 
+          if (latitude !== null && longitude !== null) {
+            imageDoc.location = {
+              type: 'Point',
+              coordinates: [longitude, latitude], 
+            };
+          }
+          
           await imageDoc.save();
           console.log('Image saved to DB:', imageDoc);
 

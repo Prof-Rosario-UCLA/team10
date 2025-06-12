@@ -6,11 +6,12 @@ const UploadForm = () => {
   const [useCamera, setUseCamera] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
+  const [location, setLocation] = useState(null);
+  const [locationError, setLocationError] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
 
-  // Start camera when toggled on
   useEffect(() => {
     if (useCamera) {
       navigator.mediaDevices.getUserMedia({ video: true })
@@ -37,6 +38,25 @@ const UploadForm = () => {
       }
     };
   }, [useCamera]);
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+        });
+        setLocationError('');
+      },
+      (err) => {
+        setLocationError('Could not get location: ' + err.message);
+      }
+    );
+  };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -72,6 +92,11 @@ const UploadForm = () => {
       const formData = new FormData();
       formData.append('image', file);
 
+      if (location) {
+        formData.append('latitude', location.latitude);
+        formData.append('longitude', location.longitude);
+      }
+
       setMessage('Uploading image...');
       await axios.post(
         'https://backend-dot-tokyo-mind-458722-t5.uw.r.appspot.com/api/upload',
@@ -101,6 +126,11 @@ const UploadForm = () => {
           onChange={() => setUseCamera(prev => !prev)}
         /> Use Camera
       </label>
+      <button type="button" onClick={getLocation}>Get Location</button>
+      {location && (
+        <p>Location: Lat {location.latitude.toFixed(5)}, Lng {location.longitude.toFixed(5)}</p>
+      )}
+      {locationError && <p style={{color: 'red'}}>{locationError}</p>}
 
       {useCamera ? (
         <div>

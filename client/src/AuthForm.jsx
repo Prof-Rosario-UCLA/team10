@@ -27,7 +27,7 @@ export default function AuthForm({ onAuth }) {
 };
 
   return (
-    <div>
+    <section>
       <h2>{isLogin ? 'Login' : 'Register'}</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -55,6 +55,6 @@ export default function AuthForm({ onAuth }) {
         </button>
       </form>
       {message && <p>{message}</p>}
-    </div>
+    </section>
   );
 }

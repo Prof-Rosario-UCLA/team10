@@ -31,10 +31,10 @@ export default function ImageGallery() {
           />
           <div style={infoStyle}>
             <strong>Classification:</strong> {img.labels?.[0]?.description || 'Unknown'}<br />
-            {img.location && (
+            {Array.isArray(img.location?.coordinates) && img.location.coordinates.length === 2 && (
               <>
-                <strong>Lat:</strong> {img.location.coordinates[1].toFixed(5)}<br />
-                <strong>Lng:</strong> {img.location.coordinates[0].toFixed(5)}
+                <strong>Lat:</strong> {img.location.coordinates[1]?.toFixed(5)}<br />
+                <strong>Lng:</strong> {img.location.coordinates[0]?.toFixed(5)}
               </>
             )}
           </div>
